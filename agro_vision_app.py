@@ -2,118 +2,295 @@ import streamlit as st
 import cv2
 import numpy as np
 from inference_sdk import InferenceHTTPClient
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 import io
 import time
 
 # ---------------- PAGE CONFIGURATION ----------------
 st.set_page_config(
-    page_title="🌿 Agro Vision - Lemon Disease Detection",
+    page_title="Agro Vision - Lemon Detection System",
     page_icon="🍋",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-# ---------------- CUSTOM CSS FOR MOBILE OPTIMIZATION ----------------
+# ---------------- EXACT TKINTER GUI STYLING ----------------
 st.markdown("""
 <style>
-    /* Main container */
-    .main {
-        padding: 1rem;
+    /* Remove default Streamlit padding */
+    .main > div {
+        padding-top: 0rem;
+        padding-left: 0rem;
+        padding-right: 0rem;
     }
     
-    /* Header styling */
-    .header-container {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Hide Streamlit header and footer */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Main background - dark navy blue */
+    .stApp {
+        background-color: #0a0e27;
+    }
+    
+    /* Header section - exact match */
+    .header-section {
+        background: linear-gradient(135deg, #1a1f3a 0%, #0d1129 100%);
         padding: 2rem;
-        border-radius: 15px;
-        margin-bottom: 2rem;
         text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-bottom: 2px solid #2a3f5f;
+        margin-bottom: 0;
+    }
+    
+    .header-emoji {
+        font-size: 4rem;
+        margin-bottom: -1rem;
     }
     
     .header-title {
+        color: #ffd700;
+        font-size: 3.5rem;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .header-subtitle {
+        color: #8899aa;
+        font-size: 1.1rem;
+        margin-top: 0.5rem;
+        font-weight: 300;
+    }
+    
+    /* Main container layout */
+    .main-container {
+        display: flex;
+        gap: 0;
+        padding: 0;
+        margin: 0;
+    }
+    
+    /* Left panel - Control Panel */
+    .control-panel {
+        background: #16213e;
+        width: 320px;
+        padding: 0;
+        border-right: 1px solid #2a3f5f;
+        min-height: calc(100vh - 160px);
+    }
+    
+    .panel-header {
+        background: #1a1f3a;
+        padding: 1.5rem;
+        border-bottom: 2px solid #ffd700;
+    }
+    
+    .panel-title {
         color: white;
-        font-size: 2.5rem;
+        font-size: 1.4rem;
         font-weight: bold;
         margin: 0;
     }
     
-    .header-subtitle {
-        color: #f0f0f0;
-        font-size: 1.2rem;
-        margin-top: 0.5rem;
+    .panel-icon {
+        margin-right: 0.5rem;
     }
     
-    /* Stats cards */
-    .stat-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 1.5rem;
-        border-radius: 10px;
+    /* Buttons - exact Tkinter style */
+    .stButton > button {
+        width: 100%;
+        height: 60px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 0;
+        margin: 0;
+        transition: all 0.2s;
+    }
+    
+    /* Button colors matching Tkinter */
+    div[data-testid="column"]:nth-child(1) .stButton:nth-child(1) > button {
+        background: #2c3e5f;
         color: white;
-        text-align: center;
-        margin: 0.5rem 0;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     
-    .stat-value {
-        font-size: 2rem;
+    div[data-testid="column"]:nth-child(1) .stButton:nth-child(1) > button:hover {
+        background: #3a4f7a;
+    }
+    
+    div[data-testid="column"]:nth-child(1) .stButton:nth-child(2) > button {
+        background: #2c3e5f;
+        color: white;
+    }
+    
+    div[data-testid="column"]:nth-child(1) .stButton:nth-child(2) > button:hover {
+        background: #3a4f7a;
+    }
+    
+    div[data-testid="column"]:nth-child(1) .stButton:nth-child(3) > button {
+        background: #d4145a;
+        color: white;
+    }
+    
+    div[data-testid="column"]:nth-child(1) .stButton:nth-child(3) > button:hover {
+        background: #e6195f;
+    }
+    
+    div[data-testid="column"]:nth-child(1) .stButton:nth-child(4) > button {
+        background: #5a3472;
+        color: white;
+    }
+    
+    div[data-testid="column"]:nth-child(1) .stButton:nth-child(4) > button:hover {
+        background: #6d4189;
+    }
+    
+    /* Stats section */
+    .stats-section {
+        background: #16213e;
+        padding: 1.5rem;
+        border-top: 2px solid #ffd700;
+        margin-top: 1rem;
+    }
+    
+    .stats-title {
+        color: white;
+        font-size: 1.2rem;
         font-weight: bold;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .stat-item {
+        background: #1a1f3a;
+        padding: 1rem 1.5rem;
+        margin: 0.8rem 0;
+        border-left: 3px solid #667eea;
+        border-radius: 4px;
     }
     
     .stat-label {
-        font-size: 0.9rem;
-        opacity: 0.9;
-        margin-top: 0.3rem;
+        color: #8899aa;
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+        display: flex;
+        align-items: center;
     }
     
-    /* Disease info card */
-    .disease-card {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 10px;
-        border-left: 5px solid #667eea;
-        margin: 1rem 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    
-    .disease-title {
-        color: #667eea;
+    .stat-value {
+        color: #00ff88;
         font-size: 1.5rem;
         font-weight: bold;
+    }
+    
+    .stat-value.objects {
+        color: #ffd700;
+    }
+    
+    .stat-value.confidence {
+        color: #00ccff;
+    }
+    
+    .stat-value.classes {
+        color: #ff88cc;
+        font-size: 1rem;
+    }
+    
+    /* Right panel - Display */
+    .display-panel {
+        flex: 1;
+        background: #0a0e27;
+        padding: 0;
+    }
+    
+    .display-header {
+        background: #16213e;
+        padding: 1.5rem;
+        border-bottom: 2px solid #2a3f5f;
+    }
+    
+    .display-title {
+        color: white;
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .display-content {
+        background: #0f1419;
+        min-height: calc(100vh - 220px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 1.5rem;
+        border: 1px solid #2a3f5f;
+        border-radius: 4px;
+    }
+    
+    .placeholder {
+        text-align: center;
+        color: #4a5570;
+    }
+    
+    .placeholder-icon {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+    
+    .placeholder-text {
+        font-size: 1.3rem;
         margin-bottom: 0.5rem;
     }
     
-    .confidence-badge {
-        background: #28a745;
-        color: white;
-        padding: 0.3rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.9rem;
-        display: inline-block;
-        margin-top: 0.5rem;
+    .placeholder-subtext {
+        font-size: 1rem;
+        opacity: 0.7;
     }
     
-    /* Mobile responsive */
-    @media (max-width: 768px) {
-        .header-title {
-            font-size: 1.8rem;
-        }
-        .header-subtitle {
-            font-size: 1rem;
-        }
+    /* Footer - exact match */
+    .footer-section {
+        background: #16213e;
+        padding: 1rem 2rem;
+        border-top: 1px solid #2a3f5f;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
     
-    /* Loading animation */
-    .stSpinner > div {
-        border-color: #667eea !important;
+    .footer-status {
+        color: #6a7a9a;
+        font-size: 0.95rem;
     }
     
-    /* Upload button styling */
+    .status-indicator {
+        color: #00ff88;
+        margin-right: 0.3rem;
+    }
+    
+    /* File uploader styling */
     .uploadedFile {
-        border: 2px dashed #667eea;
-        border-radius: 10px;
-        padding: 1rem;
+        display: none;
+    }
+    
+    /* Image display */
+    .stImage {
+        border-radius: 4px;
+    }
+    
+    /* Adjust column spacing */
+    div[data-testid="column"] {
+        padding: 0 !important;
+    }
+    
+    /* Remove gaps */
+    .row-widget {
+        gap: 0 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -122,64 +299,34 @@ st.markdown("""
 API_KEY = "mRwKi3IVO4VcXC5ljoix"
 MODEL_ID = "agro-vision-lemon-p56kr/2"
 
-# Disease information database
-DISEASE_INFO = {
-    "Anthracnose": {
-        "color": (128, 0, 128),
-        "severity": "High",
-        "symptoms": "Dark, sunken lesions on leaves, stems, and fruits",
-        "remedy": "Apply copper-based fungicides. Remove infected plant parts. Improve air circulation.",
-        "prevention": "Avoid overhead watering. Maintain proper plant spacing."
-    },
-    "Citrus butterfly": {
-        "color": (255, 255, 0),
-        "severity": "Medium",
-        "symptoms": "Caterpillar feeding damage, leaf defoliation",
-        "remedy": "Manual removal of caterpillars. Use neem oil spray. Apply Bacillus thuringiensis.",
-        "prevention": "Regular monitoring. Use pheromone traps."
-    },
-    "Citrus canker": {
-        "color": (255, 0, 255),
-        "severity": "High",
-        "symptoms": "Raised, corky lesions on leaves, stems, and fruits",
-        "remedy": "Apply copper-based bactericides. Remove and destroy infected parts immediately.",
-        "prevention": "Use disease-free planting material. Avoid working with wet plants."
-    },
-    "Citrus Hindu mite": {
-        "color": (255, 0, 0),
-        "severity": "Medium",
-        "symptoms": "Leaf curling, distortion, and bronzing",
-        "remedy": "Apply miticides. Use sulfur spray. Release predatory mites.",
-        "prevention": "Regular monitoring. Maintain plant health with proper nutrition."
-    },
-    "Citrus leaf miner": {
-        "color": (0, 128, 255),
-        "severity": "Low",
-        "symptoms": "Serpentine mines on young leaves, leaf distortion",
-        "remedy": "Apply neem oil. Use spinosad-based sprays. Time spraying with new flush.",
-        "prevention": "Avoid excessive nitrogen fertilization. Protect new growth."
-    },
-    "Healthy": {
-        "color": (0, 255, 0),
-        "severity": "None",
-        "symptoms": "No visible disease symptoms. Plant appears vigorous and green.",
-        "remedy": "No treatment needed. Continue regular maintenance.",
-        "prevention": "Maintain good cultural practices. Regular monitoring."
-    },
-    "Nutrient Deficiency": {
-        "color": (0, 200, 255),
-        "severity": "Medium",
-        "symptoms": "Yellowing leaves, stunted growth, poor fruit quality",
-        "remedy": "Apply balanced fertilizer. Conduct soil test. Apply specific micronutrients as needed.",
-        "prevention": "Regular soil testing. Proper fertilization schedule. Maintain soil pH 6-7."
-    }
+# Disease colors (BGR for OpenCV)
+DISEASE_COLORS = {
+    'Anthracnose': (128, 0, 128),
+    'Citrus butterfly': (255, 255, 0),
+    'Citrus canker': (255, 0, 255),
+    'Citrus Hindu mite': (255, 0, 0),
+    'Citrus leaf miner': (0, 128, 255),
+    'Healthy': (0, 255, 0),
+    'Nutrient Deficiency': (0, 200, 255),
 }
 
 # Initialize session state
 if 'processed_images' not in st.session_state:
     st.session_state.processed_images = 0
-if 'total_detections' not in st.session_state:
-    st.session_state.total_detections = 0
+if 'current_detections' not in st.session_state:
+    st.session_state.current_detections = 0
+if 'fps' not in st.session_state:
+    st.session_state.fps = '--'
+if 'confidence' not in st.session_state:
+    st.session_state.confidence = '--'
+if 'classes' not in st.session_state:
+    st.session_state.classes = 'None'
+if 'current_image' not in st.session_state:
+    st.session_state.current_image = None
+if 'annotated_image' not in st.session_state:
+    st.session_state.annotated_image = None
+if 'webcam_active' not in st.session_state:
+    st.session_state.webcam_active = False
 
 # ---------------- HELPER FUNCTIONS ----------------
 @st.cache_resource
@@ -201,219 +348,239 @@ def draw_predictions(image, predictions):
         x, y = int(pred['x']), int(pred['y'])
         w, h = int(pred['width']), int(pred['height'])
         
-        # Get color for this class
-        color = DISEASE_INFO.get(class_name, {}).get('color', (0, 165, 255))
+        color = DISEASE_COLORS.get(class_name, (0, 165, 255))
         
-        # Calculate box coordinates
         x1, y1 = int(x - w/2), int(y - h/2)
         x2, y2 = int(x + w/2), int(y + h/2)
         
-        # Draw bounding box
-        thickness = max(2, int(min(img.shape[0], img.shape[1]) / 300))
+        thickness = max(3, int(min(img.shape[0], img.shape[1]) / 300))
         cv2.rectangle(img, (x1, y1), (x2, y2), color, thickness)
         
-        # Prepare label
         label = f"{class_name} {confidence*100:.0f}%"
-        font_scale = max(0.5, min(img.shape[0], img.shape[1]) / 1000)
-        font_thickness = max(1, int(font_scale * 2))
+        font_scale = max(0.6, min(img.shape[0], img.shape[1]) / 800)
+        font_thickness = max(2, int(font_scale * 2))
         
-        # Get label size
         (label_w, label_h), baseline = cv2.getTextSize(
             label, cv2.FONT_HERSHEY_DUPLEX, font_scale, font_thickness
         )
         
-        # Draw label background (lighter shade)
         label_color = tuple(min(255, c + 80) for c in color)
-        padding = int(10 * font_scale)
+        padding = int(12 * font_scale)
         cv2.rectangle(img,
                      (x1, y1 - label_h - padding * 2),
                      (x1 + label_w + padding * 2, y1),
                      label_color, -1)
         
-        # Draw label text
         cv2.putText(img, label, (x1 + padding, y1 - padding),
                    cv2.FONT_HERSHEY_DUPLEX, font_scale, (0, 0, 0), font_thickness)
     
-    # Convert back to RGB
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     return Image.fromarray(img)
 
 def process_image(image_file, client):
     """Process image and return results"""
     try:
-        # Save the uploaded file temporarily
         with open("temp_upload.jpg", "wb") as f:
             f.write(image_file.getvalue())
         
-        # Run inference on the saved file
         result = client.infer("temp_upload.jpg", model_id=MODEL_ID)
         return result, None
     except Exception as e:
         return None, str(e)
 
-# ---------------- MAIN APP ----------------
-# Header
+# ---------------- HEADER ----------------
 st.markdown("""
-<div class="header-container">
-    <h1 class="header-title">🍋 Agro Vision</h1>
-    <p class="header-subtitle">AI-Powered Lemon Disease Detection for Farmers</p>
+<div class="header-section">
+    <div class="header-emoji">🍋</div>
+    <h1 class="header-title">AGRO VISION</h1>
+    <p class="header-subtitle">AI-Powered Lemon Disease Detection System</p>
 </div>
 """, unsafe_allow_html=True)
 
-# Sidebar
-with st.sidebar:
-    st.header("📊 Statistics")
-    st.markdown(f"""
-    <div class="stat-card">
-        <div class="stat-value">{st.session_state.processed_images}</div>
-        <div class="stat-label">Images Analyzed</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown(f"""
-    <div class="stat-card">
-        <div class="stat-value">{st.session_state.total_detections}</div>
-        <div class="stat-label">Total Detections</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    st.header("ℹ️ About")
-    st.info("""
-    **Agro Vision** helps farmers detect lemon diseases early using AI technology.
-    
-    Simply upload a photo of a lemon leaf, and our AI will:
-    - Identify diseases
-    - Show confidence levels
-    - Provide treatment recommendations
-    """)
-    
-    st.markdown("---")
-    st.header("🌐 Language")
-    language = st.selectbox("Select Language", ["English", "தமிழ் (Tamil)"], index=0)
+# ---------------- MAIN LAYOUT ----------------
+col1, col2 = st.columns([320, 1000], gap="small")
 
-# Main content area
-col1, col2 = st.columns([1, 1])
-
+# LEFT PANEL - Control Panel
 with col1:
-    st.subheader("📤 Upload Leaf Image")
+    st.markdown("""
+    <div class="panel-header">
+        <h2 class="panel-title"><span class="panel-icon">⚙️</span>Control Panel</h2>
+    </div>
+    """, unsafe_allow_html=True)
     
-    # Camera input for mobile
-    camera_photo = st.camera_input("Take a photo 📸")
+    st.write("")
     
-    # File uploader
+    # Select Image File button
     uploaded_file = st.file_uploader(
-        "Or upload from gallery",
+        "label",
         type=["jpg", "jpeg", "png"],
-        help="Upload a clear photo of the lemon leaf"
+        label_visibility="collapsed",
+        key="file_upload"
     )
+    if st.button("Analyze Image", key="select_btn"):
+        if uploaded_file:
+            st.session_state.current_image = Image.open(uploaded_file)
+            st.session_state.webcam_active = False
+            
+            # Process image
+            with st.spinner("Processing..."):
+                client = get_client()
+                result, error = process_image(uploaded_file, client)
+                
+                if result:
+                    predictions = result.get('predictions', [])
+                    st.session_state.current_detections = len(predictions)
+                    
+                    if predictions:
+                        st.session_state.annotated_image = draw_predictions(
+                            st.session_state.current_image, predictions
+                        )
+                        
+                        # Update stats
+                        avg_conf = sum(p['confidence'] for p in predictions) / len(predictions)
+                        st.session_state.confidence = f"{avg_conf*100:.1f}%"
+                        
+                        classes = set(p['class'] for p in predictions)
+                        st.session_state.classes = ", ".join(classes)
+                    else:
+                        st.session_state.annotated_image = st.session_state.current_image
+                        st.session_state.confidence = "--"
+                        st.session_state.classes = "None"
+                    
+                    st.session_state.processed_images += 1
+                    st.rerun()
     
-    # Select input source
-    input_image = camera_photo if camera_photo else uploaded_file
+    # Start Webcam button - Toggle webcam
+    webcam_btn_text = "⏹️  Stop Webcam" if st.session_state.webcam_active else "📷  Start Webcam"
+    if st.button(webcam_btn_text, key="webcam_btn"):
+        st.session_state.webcam_active = not st.session_state.webcam_active
+        if not st.session_state.webcam_active:
+            st.session_state.current_image = None
+            st.session_state.annotated_image = None
+        st.rerun()
     
-    if input_image:
-        # Display original image
-        image = Image.open(input_image)
-        st.image(image, caption="Original Image", use_container_width=True)
+    # Camera input (shown only when webcam is active)
+    if st.session_state.webcam_active:
+        camera_photo = st.camera_input("Take a photo", label_visibility="visible", key="camera")
         
-        # Analyze button
-        if st.button("🔍 Analyze Leaf", type="primary", use_container_width=True):
-            with st.spinner("🤖 AI is analyzing your leaf image..."):
-                # Get cached client
+        if camera_photo:
+            st.session_state.current_image = Image.open(camera_photo)
+            
+            # Auto-process when photo is taken
+            with st.spinner("Analyzing..."):
                 client = get_client()
                 
-                # Process image
-                start_time = time.time()
-                result, error = process_image(input_image, client)
-                processing_time = time.time() - start_time
+                # Convert camera photo
+                img_file = io.BytesIO()
+                st.session_state.current_image.save(img_file, format='JPEG')
+                img_file.seek(0)
                 
-                if error:
-                    st.error(f"❌ Error: {error}")
-                else:
-                    # Update statistics
-                    st.session_state.processed_images += 1
+                # Create a temporary file-like object
+                class TempFile:
+                    def __init__(self, data):
+                        self.data = data
+                    def getvalue(self):
+                        return self.data
+                
+                temp_file = TempFile(img_file.getvalue())
+                result, error = process_image(temp_file, client)
+                
+                if result:
+                    predictions = result.get('predictions', [])
+                    st.session_state.current_detections = len(predictions)
                     
-                    # Store results in session state
-                    st.session_state.last_result = result
-                    st.session_state.last_image = image
-                    st.session_state.processing_time = processing_time
-                    
-                    st.success(f"✅ Analysis complete in {processing_time:.2f}s!")
-                    st.rerun()
-
-with col2:
-    st.subheader("🎯 Detection Results")
+                    if predictions:
+                        st.session_state.annotated_image = draw_predictions(
+                            st.session_state.current_image, predictions
+                        )
+                        
+                        avg_conf = sum(p['confidence'] for p in predictions) / len(predictions)
+                        st.session_state.confidence = f"{avg_conf*100:.1f}%"
+                        
+                        classes = set(p['class'] for p in predictions)
+                        st.session_state.classes = ", ".join(classes)
+                    else:
+                        st.session_state.annotated_image = st.session_state.current_image
+                        st.session_state.confidence = "--"
+                        st.session_state.classes = "None"
     
-    if 'last_result' in st.session_state and st.session_state.last_result:
-        result = st.session_state.last_result
-        predictions = result.get('predictions', [])
-        
-        # Update total detections
-        st.session_state.total_detections = len(predictions)
-        
-        if len(predictions) > 0:
-            # Draw predictions on image
-            annotated_image = draw_predictions(st.session_state.last_image, predictions)
-            st.image(annotated_image, caption="Detected Issues", use_container_width=True)
-            
-            # Download button
+    # Save Results button
+    if st.button("💾  Save Result", key="save_btn", disabled=st.session_state.annotated_image is None):
+        if st.session_state.annotated_image:
             buf = io.BytesIO()
-            annotated_image.save(buf, format='JPEG', quality=95)
+            st.session_state.annotated_image.save(buf, format='JPEG', quality=95)
             st.download_button(
-                label="⬇️ Download Result",
+                label="Download Image",
                 data=buf.getvalue(),
                 file_name="agro_vision_result.jpg",
                 mime="image/jpeg",
-                use_container_width=True
+                key="download_hidden"
             )
-            
-            # Show detailed results
-            st.markdown("### 📋 Detailed Analysis")
-            
-            for i, pred in enumerate(predictions, 1):
-                class_name = pred['class']
-                confidence = pred['confidence'] * 100
-                
-                # Get disease info
-                disease_info = DISEASE_INFO.get(class_name, {})
-                severity = disease_info.get('severity', 'Unknown')
-                symptoms = disease_info.get('symptoms', 'N/A')
-                remedy = disease_info.get('remedy', 'Consult agricultural expert')
-                prevention = disease_info.get('prevention', 'N/A')
-                
-                # Severity color
-                severity_color = {
-                    'High': '🔴',
-                    'Medium': '🟡',
-                    'Low': '🟢',
-                    'None': '✅'
-                }.get(severity, '⚪')
-                
-                with st.expander(f"{i}. {class_name} - {confidence:.1f}% confidence", expanded=True):
-                    st.markdown(f"""
-                    **{severity_color} Severity:** {severity}
-                    
-                    **🔍 Symptoms:**
-                    {symptoms}
-                    
-                    **💊 Recommended Treatment:**
-                    {remedy}
-                    
-                    **🛡️ Prevention:**
-                    {prevention}
-                    """)
-                    
-        else:
-            st.info("✅ No issues detected! Your plant appears healthy.")
-            st.balloons()
-    else:
-        st.info("👆 Upload an image to see detection results here")
+    
+    # Clear Display button
+    if st.button("🗑️  Clear Display", key="clear_btn"):
+        st.session_state.current_image = None
+        st.session_state.annotated_image = None
+        st.session_state.current_detections = 0
+        st.session_state.confidence = "--"
+        st.session_state.classes = "None"
+        st.rerun()
+    
+    # Statistics Section
+    st.markdown("""
+    <div class="stats-section">
+        <div class="stats-title">📊 Detection Statistics</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown(f"""
+    <div class="stat-item">
+        <div class="stat-label">🎯 Objects Detected</div>
+        <div class="stat-value objects">{st.session_state.current_detections} Objects</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown(f"""
+    <div class="stat-item">
+        <div class="stat-label">📈 Average Confidence</div>
+        <div class="stat-value confidence">{st.session_state.confidence}</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown(f"""
+    <div class="stat-item">
+        <div class="stat-label">🏷️ Detected Classes</div>
+        <div class="stat-value classes">{st.session_state.classes}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-# Footer
-st.markdown("---")
-st.markdown("""
-<div style='text-align: center; color: #666; padding: 1rem;'>
-    <p>🌾 Powered by AI • Made for Farmers • Free to Use</p>
-    <p style='font-size: 0.9rem;'>Model: agro-vision-lemon-p56kr/2 | Accuracy: 95%+</p>
+# RIGHT PANEL - Display
+with col2:
+    st.markdown("""
+    <div class="display-header">
+        <h2 class="display-title">🖼️ Detection Display</h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Display area
+    if st.session_state.annotated_image:
+        st.image(st.session_state.annotated_image, use_container_width=True)
+    else:
+        st.markdown("""
+        <div class="display-content">
+            <div class="placeholder">
+                <div class="placeholder-icon">📁</div>
+                <div class="placeholder-text">Select an image or start webcam</div>
+                <div class="placeholder-subtext">to begin AI-powered detection</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ---------------- FOOTER ----------------
+st.markdown(f"""
+<div class="footer-section">
+    <div class="footer-status">
+        <span class="status-indicator">🟢</span>System Ready  |  Model: agro-vision-lemon-p56kr/2
+    </div>
 </div>
 """, unsafe_allow_html=True)
