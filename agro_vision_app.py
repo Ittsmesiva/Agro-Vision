@@ -417,7 +417,7 @@ with col1:
         label_visibility="collapsed",
         key="file_upload"
     )
-    if st.button("📁  Analyze Image", key="select_btn"):
+    if st.button("Analyze Image", key="select_btn"):
         if uploaded_file:
             st.session_state.current_image = Image.open(uploaded_file)
             st.session_state.webcam_active = False
@@ -449,8 +449,6 @@ with col1:
                     
                     st.session_state.processed_images += 1
                     st.rerun()
-                else:
-                    st.error(f"Error: {error}")
     
     # Start Webcam button - Toggle webcam
     webcam_btn_text = "⏹  Stop Webcam" if st.session_state.webcam_active else "📷  Start Webcam"
@@ -479,7 +477,7 @@ with col1:
                 
                 # Create a temporary file-like object
                 class TempFile:
-                    def __init__(self, data):
+                    def _init_(self, data):
                         self.data = data
                     def getvalue(self):
                         return self.data
