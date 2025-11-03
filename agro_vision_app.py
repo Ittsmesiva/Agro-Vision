@@ -404,7 +404,7 @@ col1, col2 = st.columns([320, 1000], gap="small")
 with col1:
     st.markdown("""
     <div class="panel-header">
-        <h2 class="panel-title"><span class="panel-icon">⚙️</span>Control Panel</h2>
+        <h2 class="panel-title"><span class="panel-icon">⚙</span>Control Panel</h2>
     </div>
     """, unsafe_allow_html=True)
     
@@ -417,7 +417,7 @@ with col1:
         label_visibility="collapsed",
         key="file_upload"
     )
-    if st.button("Analyze Image", key="select_btn"):
+    if st.button("📁  Analyze Image", key="select_btn"):
         if uploaded_file:
             st.session_state.current_image = Image.open(uploaded_file)
             st.session_state.webcam_active = False
@@ -449,9 +449,11 @@ with col1:
                     
                     st.session_state.processed_images += 1
                     st.rerun()
+                else:
+                    st.error(f"Error: {error}")
     
     # Start Webcam button - Toggle webcam
-    webcam_btn_text = "⏹️  Stop Webcam" if st.session_state.webcam_active else "📷  Start Webcam"
+    webcam_btn_text = "⏹  Stop Webcam" if st.session_state.webcam_active else "📷  Start Webcam"
     if st.button(webcam_btn_text, key="webcam_btn"):
         st.session_state.webcam_active = not st.session_state.webcam_active
         if not st.session_state.webcam_active:
@@ -518,7 +520,7 @@ with col1:
             )
     
     # Clear Display button
-    if st.button("🗑️  Clear Display", key="clear_btn"):
+    if st.button("🗑  Clear Display", key="clear_btn"):
         st.session_state.current_image = None
         st.session_state.annotated_image = None
         st.session_state.current_detections = 0
@@ -549,7 +551,7 @@ with col1:
     
     st.markdown(f"""
     <div class="stat-item">
-        <div class="stat-label">🏷️ Detected Classes</div>
+        <div class="stat-label">🏷 Detected Classes</div>
         <div class="stat-value classes">{st.session_state.classes}</div>
     </div>
     """, unsafe_allow_html=True)
@@ -558,7 +560,7 @@ with col1:
 with col2:
     st.markdown("""
     <div class="display-header">
-        <h2 class="display-title">🖼️ Detection Display</h2>
+        <h2 class="display-title">🖼 Detection Display</h2>
     </div>
     """, unsafe_allow_html=True)
     
