@@ -310,6 +310,306 @@ DISEASE_COLORS = {
     'Nutrient Deficiency': (0, 200, 255),
 }
 
+# Comprehensive Disease Information Database
+DISEASE_INFO = {
+    'Anthracnose': {
+        'severity': '🔴 High Risk',
+        'description': 'Fungal disease causing dark, sunken lesions on leaves, stems, and fruits. Can lead to severe defoliation and fruit drop.',
+        'symptoms': [
+            'Dark brown to black circular spots on leaves',
+            'Sunken lesions with raised borders',
+            'Premature fruit drop',
+            'Twig dieback in severe cases',
+            'Pink spore masses in humid conditions'
+        ],
+        'immediate_cure': [
+            '1. Remove and destroy all infected plant parts immediately',
+            '2. Apply copper oxychloride (0.3%) or mancozeb (0.25%) spray',
+            '3. Spray with carbendazim (0.1%) for systemic control',
+            '4. Repeat application every 10-15 days',
+            '5. Ensure proper drainage around plants'
+        ],
+        'long_term_treatment': [
+            'Apply preventive copper sprays before rainy season',
+            'Prune to improve air circulation',
+            'Use resistant varieties when replanting',
+            'Maintain balanced fertilization (avoid excess nitrogen)',
+            'Apply mulch to prevent soil splash on leaves'
+        ],
+        'prevention': [
+            'Plant in well-drained soil with good air circulation',
+            'Avoid overhead irrigation',
+            'Remove fallen leaves and fruits regularly',
+            'Prune trees to allow sunlight penetration',
+            'Apply preventive fungicide sprays during monsoon',
+            'Use drip irrigation instead of sprinklers'
+        ],
+        'organic_remedies': [
+            'Neem oil spray (5ml/liter) weekly',
+            'Bordeaux mixture (1%) before flowering',
+            'Garlic extract spray as natural fungicide',
+            'Trichoderma viride application to soil'
+        ]
+    },
+    'Citrus butterfly': {
+        'severity': '🟡 Medium Risk',
+        'description': 'Caterpillar pest that feeds on young citrus leaves, causing defoliation and stunted growth.',
+        'symptoms': [
+            'Chewed and damaged young leaves',
+            'Presence of green/brown caterpillars on plants',
+            'Defoliation of new shoots',
+            'Bird dropping-like caterpillars',
+            'Irregular holes in leaves'
+        ],
+        'immediate_cure': [
+            '1. Handpick and destroy caterpillars manually',
+            '2. Spray Bacillus thuringiensis (Bt) at 1g/liter',
+            '3. Apply neem-based insecticide (5ml/liter)',
+            '4. Use spinosad spray for heavy infestation',
+            '5. Repeat every 7-10 days if needed'
+        ],
+        'long_term_treatment': [
+            'Install pheromone traps to monitor butterfly population',
+            'Encourage natural predators (birds, wasps)',
+            'Regular monitoring of new growth',
+            'Apply neem cake to soil (200g per plant)',
+            'Maintain plant health with balanced nutrition'
+        ],
+        'prevention': [
+            'Protect young plants with fine mesh netting',
+            'Plant companion plants like marigold',
+            'Regular inspection of new shoots',
+            'Avoid excessive nitrogen fertilization',
+            'Maintain garden hygiene',
+            'Use sticky traps for adult butterflies'
+        ],
+        'organic_remedies': [
+            'Neem oil spray (3ml/liter) weekly',
+            'Garlic-chili spray as repellent',
+            'Soap solution spray (5ml liquid soap/liter)',
+            'Encourage beneficial insects like ladybugs'
+        ]
+    },
+    'Citrus canker': {
+        'severity': '🔴 High Risk - Bacterial',
+        'description': 'Highly contagious bacterial disease causing raised corky lesions. Can spread rapidly and severely damage crops.',
+        'symptoms': [
+            'Raised, corky lesions with yellow halos',
+            'Brown spots on leaves, stems, and fruits',
+            'Premature leaf and fruit drop',
+            'Fruit blemishes reducing market value',
+            'Lesions on both sides of leaves'
+        ],
+        'immediate_cure': [
+            '1. ISOLATE infected plants immediately',
+            '2. Remove and burn all infected parts',
+            '3. Spray copper hydroxide (0.3%) thoroughly',
+            '4. Apply streptocycline (100 ppm) + copper oxychloride',
+            '5. Disinfect pruning tools with bleach solution',
+            '6. Repeat sprays every 7-10 days'
+        ],
+        'long_term_treatment': [
+            'Quarantine new plants for 30 days before planting',
+            'Use only disease-free planting material',
+            'Apply copper sprays preventively during monsoon',
+            'Maintain windbreaks to reduce wind-blown spread',
+            'Remove severely infected trees completely'
+        ],
+        'prevention': [
+            'CRITICAL: Plant only certified disease-free nursery stock',
+            'Never work with plants when wet',
+            'Implement strict quarantine protocols',
+            'Control citrus leaf miner (vector)',
+            'Use copper sprays before rain',
+            'Disinfect all tools and equipment',
+            'Avoid overhead irrigation',
+            'Plant windbreaks to reduce bacterial spread'
+        ],
+        'organic_remedies': [
+            'Bordeaux mixture (1%) spray',
+            'Copper-based organic fungicides',
+            'Maintain plant vigor with compost',
+            'Remove volunteer citrus plants nearby'
+        ],
+        'legal_note': 'Citrus canker is a quarantine disease in many regions. Report to local agricultural authorities.'
+    },
+    'Citrus Hindu mite': {
+        'severity': '🟡 Medium Risk',
+        'description': 'Microscopic mites causing leaf curling, distortion, and bronzing. Thrive in hot, dry conditions.',
+        'symptoms': [
+            'Downward curling of leaf edges',
+            'Silvering or bronzing of leaves',
+            'Leaf distortion and stunting',
+            'Fruit skin russeting',
+            'Fine webbing under leaves (severe cases)'
+        ],
+        'immediate_cure': [
+            '1. Spray wettable sulfur (2g/liter) thoroughly',
+            '2. Apply abamectin or spiromesifen for heavy infestation',
+            '3. Use horticultural oil (10ml/liter)',
+            '4. Ensure spray reaches underside of leaves',
+            '5. Repeat every 7-10 days, alternate chemicals'
+        ],
+        'long_term_treatment': [
+            'Release predatory mites (Amblyseius species)',
+            'Maintain regular sulfur dust application',
+            'Improve irrigation to increase humidity',
+            'Monitor with 10X hand lens regularly',
+            'Apply neem oil (5ml/liter) as suppression'
+        ],
+        'prevention': [
+            'Avoid water stress - maintain consistent moisture',
+            'Increase humidity around plants (mist occasionally)',
+            'Remove heavily infested leaves',
+            'Encourage natural predators',
+            'Avoid excessive dust on leaves',
+            'Plant windbreaks to reduce mite migration',
+            'Use reflective mulches'
+        ],
+        'organic_remedies': [
+            'Sulfur dust application weekly',
+            'Neem oil spray (5ml/liter)',
+            'Garlic-chili spray as repellent',
+            'Release predatory mites',
+            'Spray leaves with water to reduce populations'
+        ]
+    },
+    'Citrus leaf miner': {
+        'severity': '🟢 Low to Medium Risk',
+        'description': 'Moth larvae tunnel through young leaves creating serpentine mines. Mainly affects new growth.',
+        'symptoms': [
+            'Silvery serpentine trails on leaves',
+            'Leaf curling and distortion',
+            'Stunted new growth',
+            'Secondary infections in damaged tissue',
+            'Reduced photosynthesis'
+        ],
+        'immediate_cure': [
+            '1. Spray spinosad (0.5ml/liter) on new flush',
+            '2. Apply imidacloprid soil drench (0.3ml/liter)',
+            '3. Use neem oil (5ml/liter) on affected plants',
+            '4. Remove heavily mined leaves',
+            '5. Time sprays with new leaf emergence'
+        ],
+        'long_term_treatment': [
+            'Install pheromone traps for monitoring',
+            'Time fertilization to avoid excessive flushing',
+            'Encourage natural parasitoid wasps',
+            'Apply systemic insecticides during growth periods',
+            'Prune to synchronize new growth'
+        ],
+        'prevention': [
+            'Time pruning to avoid continuous flushing',
+            'Avoid excessive nitrogen fertilization',
+            'Use insect-proof netting on young plants',
+            'Protect new growth with preventive sprays',
+            'Encourage natural enemies (wasps, beetles)',
+            'Apply sticky traps to catch adult moths',
+            'Maintain balanced plant nutrition'
+        ],
+        'organic_remedies': [
+            'Neem oil spray (3-5ml/liter) on new flush',
+            'Azadirachtin-based products',
+            'Spinosad (organic approved)',
+            'Release Ageniaspis citricola (parasitoid wasp)',
+            'Spray kaolin clay as physical barrier'
+        ]
+    },
+    'Healthy': {
+        'severity': '✅ No Risk - Plant is Healthy',
+        'description': 'Plant shows no signs of disease or pest damage. Maintain current care practices.',
+        'symptoms': [
+            'Vibrant green foliage',
+            'No spots, lesions, or discoloration',
+            'Normal growth and development',
+            'Good fruit set and quality',
+            'No pest presence'
+        ],
+        'immediate_cure': [
+            'No treatment needed',
+            'Continue current maintenance practices',
+            'Monitor regularly for any changes'
+        ],
+        'long_term_treatment': [
+            'Maintain balanced fertilization schedule',
+            'Continue proper watering practices',
+            'Regular monitoring for early problem detection',
+            'Maintain soil health with organic matter',
+            'Prune for good air circulation'
+        ],
+        'prevention': [
+            'Continue regular monitoring (weekly)',
+            'Maintain balanced NPK fertilization',
+            'Ensure proper drainage',
+            'Prune to maintain air circulation',
+            'Practice crop rotation if possible',
+            'Use mulch to conserve moisture',
+            'Keep area free of weeds and debris',
+            'Apply preventive sprays during disease-prone seasons'
+        ],
+        'organic_remedies': [
+            'Compost tea application monthly',
+            'Neem cake soil amendment',
+            'Seaweed extract foliar spray',
+            'Maintain beneficial insect populations'
+        ]
+    },
+    'Nutrient Deficiency': {
+        'severity': '🟡 Medium Risk - Requires Attention',
+        'description': 'Insufficient essential nutrients affecting plant health, growth, and productivity.',
+        'symptoms': [
+            'Yellowing of leaves (chlorosis)',
+            'Stunted growth and small leaves',
+            'Poor fruit quality and yield',
+            'Leaf necrosis or browning',
+            'Weak stems and branches'
+        ],
+        'immediate_cure': [
+            '1. Conduct soil test to identify specific deficiency',
+            '2. Apply foliar spray of micronutrients (Zn, Fe, Mn, B)',
+            '3. Apply balanced NPK fertilizer (19:19:19) at 50g per plant',
+            '4. For quick response: Use water-soluble fertilizers',
+            '5. Correct soil pH if needed (ideal 6.0-7.0)'
+        ],
+        'long_term_treatment': [
+            'Nitrogen deficiency: Apply urea or ammonium sulfate',
+            'Phosphorus deficiency: Apply superphosphate',
+            'Potassium deficiency: Apply potassium sulfate',
+            'Iron deficiency: Apply chelated iron or ferrous sulfate',
+            'Zinc deficiency: Apply zinc sulfate (0.5%)',
+            'Magnesium deficiency: Apply Epsom salt (1%)',
+            'Boron deficiency: Apply borax (carefully)',
+            'Regular fertilization schedule (every 2-3 months)'
+        ],
+        'prevention': [
+            'Annual soil testing',
+            'Follow recommended fertilization schedule',
+            'Apply organic matter (compost, manure) annually',
+            'Maintain proper soil pH (6.0-7.0)',
+            'Use balanced fertilizers',
+            'Apply micronutrients based on soil test',
+            'Improve soil structure with organic amendments',
+            'Avoid over-watering (reduces nutrient uptake)'
+        ],
+        'organic_remedies': [
+            'Vermicompost application (2-3 kg per plant)',
+            'Compost tea foliar spray',
+            'Seaweed extract (rich in micronutrients)',
+            'Bone meal for phosphorus',
+            'Wood ash for potassium',
+            'Epsom salt for magnesium',
+            'Fish emulsion for nitrogen',
+            'Green manure incorporation'
+        ],
+        'fertilization_schedule': {
+            'Young plants (1-3 years)': '50-100g NPK every 2 months',
+            'Bearing plants (4+ years)': '200-500g NPK every 3 months',
+            'Micronutrients': 'Spray every 3-4 months',
+            'Organic matter': '10-20 kg compost annually'
+        }
+    }
+}
+
 # Initialize session state
 if 'processed_images' not in st.session_state:
     st.session_state.processed_images = 0
@@ -404,7 +704,7 @@ col1, col2 = st.columns([320, 1000], gap="small")
 with col1:
     st.markdown("""
     <div class="panel-header">
-        <h2 class="panel-title"><span class="panel-icon">⚙</span>Control Panel</h2>
+        <h2 class="panel-title"><span class="panel-icon">⚙️</span>Control Panel</h2>
     </div>
     """, unsafe_allow_html=True)
     
@@ -417,7 +717,7 @@ with col1:
         label_visibility="collapsed",
         key="file_upload"
     )
-    if st.button("Analyze Image", key="select_btn"):
+    if st.button("📁  Select Image File", key="select_btn"):
         if uploaded_file:
             st.session_state.current_image = Image.open(uploaded_file)
             st.session_state.webcam_active = False
@@ -430,6 +730,7 @@ with col1:
                 if result:
                     predictions = result.get('predictions', [])
                     st.session_state.current_detections = len(predictions)
+                    st.session_state.last_predictions = predictions  # Store for disease info display
                     
                     if predictions:
                         st.session_state.annotated_image = draw_predictions(
@@ -450,24 +751,15 @@ with col1:
                     st.session_state.processed_images += 1
                     st.rerun()
     
-    # Start Webcam button - Toggle webcam
-    webcam_btn_text = "⏹  Stop Webcam" if st.session_state.webcam_active else "📷  Start Webcam"
-    if st.button(webcam_btn_text, key="webcam_btn"):
-        st.session_state.webcam_active = not st.session_state.webcam_active
-        if not st.session_state.webcam_active:
-            st.session_state.current_image = None
-            st.session_state.annotated_image = None
-        st.rerun()
-    
-    # Camera input (shown only when webcam is active)
-    if st.session_state.webcam_active:
-        camera_photo = st.camera_input("Take a photo", label_visibility="visible", key="camera")
-        
+    # Start Webcam button
+    camera_photo = st.camera_input("label", label_visibility="collapsed", key="camera")
+    if st.button("📷  Start Webcam", key="webcam_btn"):
         if camera_photo:
             st.session_state.current_image = Image.open(camera_photo)
+            st.session_state.webcam_active = True
             
-            # Auto-process when photo is taken
-            with st.spinner("Analyzing..."):
+            # Process image
+            with st.spinner("Processing..."):
                 client = get_client()
                 
                 # Convert camera photo
@@ -477,7 +769,7 @@ with col1:
                 
                 # Create a temporary file-like object
                 class TempFile:
-                    def _init_(self, data):
+                    def __init__(self, data):
                         self.data = data
                     def getvalue(self):
                         return self.data
@@ -488,6 +780,7 @@ with col1:
                 if result:
                     predictions = result.get('predictions', [])
                     st.session_state.current_detections = len(predictions)
+                    st.session_state.last_predictions = predictions  # Store for disease info display
                     
                     if predictions:
                         st.session_state.annotated_image = draw_predictions(
@@ -503,6 +796,8 @@ with col1:
                         st.session_state.annotated_image = st.session_state.current_image
                         st.session_state.confidence = "--"
                         st.session_state.classes = "None"
+                    
+                    st.rerun()
     
     # Save Results button
     if st.button("💾  Save Result", key="save_btn", disabled=st.session_state.annotated_image is None):
@@ -518,7 +813,7 @@ with col1:
             )
     
     # Clear Display button
-    if st.button("🗑  Clear Display", key="clear_btn"):
+    if st.button("🗑️  Clear Display", key="clear_btn"):
         st.session_state.current_image = None
         st.session_state.annotated_image = None
         st.session_state.current_detections = 0
@@ -530,6 +825,13 @@ with col1:
     st.markdown("""
     <div class="stats-section">
         <div class="stats-title">📊 Detection Statistics</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown(f"""
+    <div class="stat-item">
+        <div class="stat-label">⚡ Frame Rate</div>
+        <div class="stat-value">{st.session_state.fps} FPS</div>
     </div>
     """, unsafe_allow_html=True)
     
@@ -549,7 +851,7 @@ with col1:
     
     st.markdown(f"""
     <div class="stat-item">
-        <div class="stat-label">🏷 Detected Classes</div>
+        <div class="stat-label">🏷️ Detected Classes</div>
         <div class="stat-value classes">{st.session_state.classes}</div>
     </div>
     """, unsafe_allow_html=True)
@@ -558,13 +860,76 @@ with col1:
 with col2:
     st.markdown("""
     <div class="display-header">
-        <h2 class="display-title">🖼 Detection Display</h2>
+        <h2 class="display-title">🖼️ Detection Display</h2>
     </div>
     """, unsafe_allow_html=True)
     
     # Display area
     if st.session_state.annotated_image:
         st.image(st.session_state.annotated_image, use_container_width=True)
+        
+        # Show detailed disease information
+        if st.session_state.current_detections > 0:
+            st.markdown("---")
+            st.markdown("### 📋 Detailed Disease Information & Treatment")
+            
+            # Get unique detected classes
+            if 'last_predictions' in st.session_state:
+                detected_classes = set(p['class'] for p in st.session_state.last_predictions)
+                
+                for disease in detected_classes:
+                    if disease in DISEASE_INFO:
+                        info = DISEASE_INFO[disease]
+                        
+                        with st.expander(f"🌿 {disease} - {info['severity']}", expanded=True):
+                            # Description
+                            st.markdown(f"**📖 Description:**")
+                            st.info(info['description'])
+                            
+                            # Symptoms
+                            st.markdown("**🔍 Symptoms to Look For:**")
+                            for symptom in info['symptoms']:
+                                st.markdown(f"- {symptom}")
+                            
+                            st.markdown("---")
+                            
+                            # Immediate Cure
+                            st.markdown("**💊 IMMEDIATE TREATMENT (Start Now):**")
+                            st.error("⚠️ Take action within 24-48 hours")
+                            for step in info['immediate_cure']:
+                                st.markdown(f"**{step}**")
+                            
+                            st.markdown("---")
+                            
+                            # Long-term Treatment
+                            st.markdown("**🔬 LONG-TERM MANAGEMENT (Next 2-4 weeks):**")
+                            for treatment in info['long_term_treatment']:
+                                st.markdown(f"- {treatment}")
+                            
+                            st.markdown("---")
+                            
+                            # Prevention
+                            st.markdown("**🛡️ PREVENTION (Future Protection):**")
+                            st.success("Follow these practices to avoid recurrence:")
+                            for prevention in info['prevention']:
+                                st.markdown(f"✓ {prevention}")
+                            
+                            st.markdown("---")
+                            
+                            # Organic Remedies
+                            st.markdown("**🌱 ORGANIC/NATURAL REMEDIES:**")
+                            for remedy in info['organic_remedies']:
+                                st.markdown(f"🌿 {remedy}")
+                            
+                            # Special notes
+                            if 'legal_note' in info:
+                                st.warning(f"⚠️ **IMPORTANT:** {info['legal_note']}")
+                            
+                            if 'fertilization_schedule' in info:
+                                st.markdown("---")
+                                st.markdown("**📅 RECOMMENDED FERTILIZATION SCHEDULE:**")
+                                for timing, amount in info['fertilization_schedule'].items():
+                                    st.markdown(f"- **{timing}:** {amount}")
     else:
         st.markdown("""
         <div class="display-content">
