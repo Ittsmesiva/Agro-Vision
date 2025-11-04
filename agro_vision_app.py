@@ -828,12 +828,6 @@ with col1:
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown(f"""
-    <div class="stat-item">
-        <div class="stat-label">⚡ Frame Rate</div>
-        <div class="stat-value">{st.session_state.fps} FPS</div>
-    </div>
-    """, unsafe_allow_html=True)
     
     st.markdown(f"""
     <div class="stat-item">
